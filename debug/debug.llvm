@@ -1,0 +1,22 @@
+; ModuleID = "__main__"
+target triple = "unknown-unknown-unknown"
+target datalayout = ""
+
+define void @"print0"(i64 %".1") 
+{
+setup:
+  %".3" = alloca i64
+  store i64 3, i64* %".3"
+  br label %"entry"
+entry:
+  %".6" = load i64, i64* %".3"
+  %".7" = getelementptr [6 x i8], [6 x i8]* @"str_0", i64 0, i64 0
+  %".8" = call i64 (i8*, i64, ...) @"printf"(i8* %".7", i64 %".6")
+  br label %"exit"
+exit:
+  ret void
+}
+
+declare i64 @"printf"(i8* %".1", i64 %".2", ...) 
+
+@"str_0" = global [6 x i8] c"%lld\0a\00"
