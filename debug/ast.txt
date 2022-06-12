@@ -1,0 +1,31 @@
+Module(
+     body=[
+          FunctionDef(
+               name='cast',
+               args=arguments(
+                    posonlyargs=[],
+                    args=[
+                         arg(
+                              arg='a',
+                              annotation=Attribute(
+                                   value=Name(id='t', ctx=Load()),
+                                   attr='i64',
+                                   ctx=Load())),
+                         arg(
+                              arg='b',
+                              annotation=Attribute(
+                                   value=Name(id='t', ctx=Load()),
+                                   attr='i32',
+                                   ctx=Load()))],
+                    kwonlyargs=[],
+                    kw_defaults=[],
+                    defaults=[]),
+               body=[
+                    Return(
+                         value=BinOp(
+                              left=Name(id='a', ctx=Load()),
+                              op=Add(),
+                              right=Name(id='b', ctx=Load())))],
+               decorator_list=[
+                    Name(id='tinyjit', ctx=Load())])],
+     type_ignores=[])
