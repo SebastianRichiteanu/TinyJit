@@ -1,5 +1,5 @@
-from jit import tinyjit
-import jit.jit_types as t
+from tinyjit import tinyjit
+import tinyjit.jit_types as t
 
 
 # ================ array
@@ -47,19 +47,17 @@ def test1111(a: t.i64, b: t.i64):
 @tinyjit
 def for0():
     b = 0
-    for a in range(2, 10):
+    for a in range(2, 10, 2):
         b += a
     for c in range(12):
         b += c
     return b
 
-#print(for0()) # TODO!!!!!!!!!!!!!!!
-
 
 @tinyjit
 def for1():
     b = 0
-    for a in range(10):
+    for a in range(2, 10):
         b += a
     return b
 
@@ -176,13 +174,12 @@ def while_break1():
 @tinyjit
 def for_break1():
     b = 1
+    c = 5
     for a in range(3, 7):
         b *= a
-        if a == 5:
+        if a == c:
             break
     return b
-
-# print(for_break1()) TODO
 
 
 @tinyjit
@@ -190,9 +187,10 @@ def print0(a: t.i64):
     print(a)
 
 
-@tinyjit
-def cast(a: t.i64, b: t.i32):
-    return a + b
+# @tinyjit
+# def cast(a: t.i64, b: t.i32):
+#     return a + b
+#
+# print(cast(3, 5))
 
 
-# print(cast(3, 5)) TODO
