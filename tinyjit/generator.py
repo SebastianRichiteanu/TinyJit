@@ -282,14 +282,21 @@ class JitGenerator:
         if not default_type:
             raise Exception(f"Type {type(node.value)} not supported yet!")
 
+        val = None
+
         if self.type_targets and self.type_targets[0] is not None:
             if not isinstance(self.type_targets[0], PrimitiveType):
                 if type(node.value) != self.type_targets[0]:
-                    raise Exception(f"Can't coerce {type(node.value)} to {self.type_targets[0]}")
+                    if type(node.value) == int and isinstance(default_type, ir.IntType):
+                        val = ir.Constant(ir.IntType(64), node.value)
+                    elif type(node.value) == float and isinstance(default_type, ir.FloatType):
+                        val = ir.Constant(ir.DoubleType(), node.value)
+                    else:
+                        raise Exception(f"Can't coerce {type(node.value)} to {self.type_targets[0]}")
 
         if default_type == str:
             val = ir.Constant(ir.ArrayType(ir.IntType(8), len(value) + 2), bytearray(value.encode("utf8")))
-        else:
+        elif not val:
             val = ir.Constant(default_type.llvm, value)
         return Value(default_type, val, node)
 
@@ -473,11 +480,16 @@ class JitGenerator:
         with self.type_target(lhs.type):
             rhs: JitObj = self.generate(node.comparators[0])
 
-        if lhs.type != rhs.type:
+        if lhs.type != rhs.type and self.test_no_class(lhs.type, rhs.type):
             raise Exception(f"Mismatched types for operation! {lhs.type} /= {rhs.type}")
 
         op_type = node.ops[0].__class__.__name__
-        op = getattr(lhs.type, f"do_{op_type}", None)
+        if isinstance(lhs.type, ir.IntType):
+            op = getattr(i64, f"do_{op_type}", None)
+        elif isinstance(lhs.type, ir.DoubleType) or isinstance(lhs.type, ir.FloatType):
+            op = getattr(f64, f"do_{op_type}", None)
+        else:
+            op = getattr(lhs.type, f"do_{op_type}", None)
 
         result = op(self, self.get_value(lhs), self.get_value(rhs))
         return Value(bul, result, node)
@@ -578,17 +590,29 @@ class JitGenerator:
         if isinstance(incr_val, ir.LoadInstr):
             self.builder.store(incr_val, incr.llvm)
         else:
-            self.builder.store(ir.Constant(ir.IntType(64), incr_val), incr.llvm)
+            if isinstance(incr_val, ir.Constant):
+                incr_const = incr_val
+            else:
+                incr_const = ir.Constant(ir.IntType(64), incr_val)
+            self.builder.store(incr_const, incr.llvm)
 
         if isinstance(stop_val, ir.LoadInstr):
             self.builder.store(stop_val, self.variables["stop"].llvm)
         else:
-            self.builder.store(ir.Constant(ir.IntType(64), stop_val), self.variables["stop"].llvm)
+            if isinstance(stop_val, ir.Constant):
+                stop_const = stop_val
+            else:
+                stop_const = ir.Constant(ir.IntType(64), stop_val)
+            self.builder.store(stop_const, self.variables["stop"].llvm)
 
         if isinstance(step_val, ir.LoadInstr):
             self.builder.store(step_val, self.variables["step"].llvm)
         else:
-            self.builder.store(ir.Constant(ir.IntType(64), step_val), self.variables["step"].llvm)
+            if isinstance(step_val, ir.Constant):
+                step_const = step_val
+            else:
+                step_const = ir.Constant(ir.IntType(64), step_val)
+            self.builder.store(step_const, self.variables["step"].llvm)
 
         self.builder.branch(test_block)
         self.builder.position_at_start(test_block)
