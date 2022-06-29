@@ -185,12 +185,3 @@ def for_break1():
 @tinyjit
 def print0(a: t.i64):
     print(a)
-
-
-# @tinyjit
-# def cast(a: t.i64, b: t.i32):
-#     return a + b
-#
-# print(cast(3, 5))
-
-

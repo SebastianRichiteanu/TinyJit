@@ -122,8 +122,9 @@ class JitGenerator:
             with open("../debug/ast.txt", "w") as f:
                 f.write(ast.dump(ast.parse(self.instructions), indent=5))
 
-            self.generate(self.instructions)
+        self.generate(self.instructions)
 
+        if self.debug_var:
             with open("../debug/debug.llvm", "w") as f:
                 f.write(str(self.module))
 
