@@ -1,31 +1,62 @@
 Module(
      body=[
           FunctionDef(
-               name='cast',
+               name='more_complex',
                args=arguments(
                     posonlyargs=[],
                     args=[
                          arg(
-                              arg='a',
+                              arg='number',
                               annotation=Attribute(
                                    value=Name(id='t', ctx=Load()),
                                    attr='i64',
-                                   ctx=Load())),
-                         arg(
-                              arg='b',
-                              annotation=Attribute(
-                                   value=Name(id='t', ctx=Load()),
-                                   attr='i32',
                                    ctx=Load()))],
                     kwonlyargs=[],
                     kw_defaults=[],
                     defaults=[]),
                body=[
+                    Assign(
+                         targets=[
+                              Name(id='b', ctx=Store())],
+                         value=Constant(value=0)),
+                    If(
+                         test=Compare(
+                              left=Name(id='number', ctx=Load()),
+                              ops=[
+                                   Gt()],
+                              comparators=[
+                                   Constant(value=0)]),
+                         body=[
+                              While(
+                                   test=Name(id='number', ctx=Load()),
+                                   body=[
+                                        AugAssign(
+                                             target=Name(id='b', ctx=Store()),
+                                             op=Mult(),
+                                             value=Name(id='number', ctx=Load())),
+                                        AugAssign(
+                                             target=Name(id='number', ctx=Store()),
+                                             op=Sub(),
+                                             value=Constant(value=1))],
+                                   orelse=[])],
+                         orelse=[
+                              While(
+                                   test=Name(id='number', ctx=Load()),
+                                   body=[
+                                        Assign(
+                                             targets=[
+                                                  Name(id='b', ctx=Store())],
+                                             value=BinOp(
+                                                  left=Name(id='b', ctx=Load()),
+                                                  op=LShift(),
+                                                  right=Constant(value=0))),
+                                        AugAssign(
+                                             target=Name(id='number', ctx=Store()),
+                                             op=Add(),
+                                             value=Constant(value=1))],
+                                   orelse=[])]),
                     Return(
-                         value=BinOp(
-                              left=Name(id='a', ctx=Load()),
-                              op=Add(),
-                              right=Name(id='b', ctx=Load())))],
+                         value=Name(id='b', ctx=Load()))],
                decorator_list=[
                     Name(id='tinyjit', ctx=Load())])],
      type_ignores=[])
