@@ -115,7 +115,7 @@ class JitGenerator:
             self.zero = self.mem_val(0)
 
         self.debug_var = True
-        #self.debug_var = False
+        self.debug_var = False
         self.obj = obj
         self.instructions = ast.parse(inspect.getsource(obj))
         self.var_counter = 0

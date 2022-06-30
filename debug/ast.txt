@@ -1,25 +1,51 @@
 Module(
      body=[
           FunctionDef(
-               name='call',
+               name='array0',
                args=arguments(
                     posonlyargs=[],
-                    args=[],
+                    args=[
+                         arg(
+                              arg='a',
+                              annotation=Name(id='arr', ctx=Load()))],
                     kwonlyargs=[],
                     kw_defaults=[],
                     defaults=[]),
                body=[
-                    Assign(
-                         targets=[
-                              Name(id='b', ctx=Store())],
-                         value=Call(
-                              func=Name(id='mod', ctx=Load()),
+                    For(
+                         target=Name(id='i', ctx=Store()),
+                         iter=Call(
+                              func=Name(id='range', ctx=Load()),
                               args=[
-                                   Constant(value=21),
-                                   Constant(value=4)],
-                              keywords=[])),
-                    Return(
-                         value=Name(id='b', ctx=Load()))],
+                                   Constant(value=10)],
+                              keywords=[]),
+                         body=[
+                              Assign(
+                                   targets=[
+                                        Subscript(
+                                             value=Name(id='a', ctx=Load()),
+                                             slice=Name(id='i', ctx=Load()),
+                                             ctx=Store())],
+                                   value=Name(id='i', ctx=Load()))],
+                         orelse=[]),
+                    For(
+                         target=Name(id='i', ctx=Store()),
+                         iter=Call(
+                              func=Name(id='range', ctx=Load()),
+                              args=[
+                                   Constant(value=10)],
+                              keywords=[]),
+                         body=[
+                              Expr(
+                                   value=Call(
+                                        func=Name(id='print', ctx=Load()),
+                                        args=[
+                                             Subscript(
+                                                  value=Name(id='a', ctx=Load()),
+                                                  slice=Name(id='i', ctx=Load()),
+                                                  ctx=Load())],
+                                        keywords=[]))],
+                         orelse=[])],
                decorator_list=[
                     Name(id='tinyjit', ctx=Load())])],
      type_ignores=[])
