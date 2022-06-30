@@ -2,53 +2,48 @@
 target triple = "unknown-unknown-unknown"
 target datalayout = ""
 
-define i64 @"more_complex"(i64 %".1") 
+define i64 @"mod"(i64 %".1", i64 %".2") 
 {
 setup:
-  %".3" = alloca i64
-  store i64 3, i64* %".3"
+  %".4" = alloca i64
+  store i64 21, i64* %".4"
   %".6" = alloca i64
-  %".35" = alloca i64
+  store i64 4, i64* %".6"
+  %".18" = alloca i64
   br label %"entry"
 entry:
-  store i64 0, i64* %".6"
-  %".8" = load i64, i64* %".3"
-  %".9" = icmp sgt i64 %".8", 0
-  br i1 %".9", label %"then", label %"else"
-exit:
-  %".38" = load i64, i64* %".35"
-  ret i64 %".38"
-then:
-  br label %"while"
-else:
-  br label %"while.1"
-end:
-  %".34" = load i64, i64* %".6"
-  store i64 %".34", i64* %".35"
+  %".9" = load i64, i64* %".4"
+  %".10" = load i64, i64* %".6"
+  %".11" = urem i64 %".9", %".10"
+  %".12" = icmp sge i64 %".9", 0
+  %".13" = sub i64 0, %".9"
+  %".14" = urem i64 %".13", %".10"
+  %".15" = sub i64 %".10", %".14"
+  %".16" = urem i64 %".15", %".10"
+  %".17" = select i1 %".12", i64 %".11", i64 %".16"
+  store i64 %".17", i64* %".18"
   br label %"exit"
-while:
-  %".12" = load i64, i64* %".6"
-  %".13" = load i64, i64* %".3"
-  %".14" = mul i64 %".12", %".13"
-  store i64 %".14", i64* %".6"
-  %".16" = load i64, i64* %".3"
-  %".17" = sub i64 %".16", 1
-  store i64 %".17", i64* %".3"
-  %".19" = load i64, i64* %".3"
-  %".20" = icmp ne i64 %".19", 0
-  br i1 %".20", label %"while", label %"while_end"
-while_end:
-  br label %"end"
-while.1:
-  %".24" = load i64, i64* %".6"
-  %".25" = shl i64 %".24", 0
-  store i64 %".25", i64* %".6"
-  %".27" = load i64, i64* %".3"
-  %".28" = add i64 %".27", 1
-  store i64 %".28", i64* %".3"
-  %".30" = load i64, i64* %".3"
-  %".31" = icmp ne i64 %".30", 0
-  br i1 %".31", label %"while.1", label %"while_end.1"
-while_end.1:
-  br label %"end"
+exit:
+  %".21" = load i64, i64* %".18"
+  ret i64 %".21"
+}
+
+define i64 @"call"() 
+{
+setup:
+  %".4" = alloca i64
+  %".6" = alloca i64
+  %".10" = alloca i64
+  br label %"entry"
+entry:
+  %".3" = call i64 @"mod"(i64 21, i64 4)
+  store i64 %".3", i64* %".4"
+  %".7" = load i64, i64* %".4"
+  store i64 %".7", i64* %".6"
+  %".9" = load i64, i64* %".6"
+  store i64 %".9", i64* %".10"
+  br label %"exit"
+exit:
+  %".13" = load i64, i64* %".10"
+  ret i64 %".13"
 }

@@ -1,16 +1,10 @@
 Module(
      body=[
           FunctionDef(
-               name='more_complex',
+               name='call',
                args=arguments(
                     posonlyargs=[],
-                    args=[
-                         arg(
-                              arg='number',
-                              annotation=Attribute(
-                                   value=Name(id='t', ctx=Load()),
-                                   attr='i64',
-                                   ctx=Load()))],
+                    args=[],
                     kwonlyargs=[],
                     kw_defaults=[],
                     defaults=[]),
@@ -18,43 +12,12 @@ Module(
                     Assign(
                          targets=[
                               Name(id='b', ctx=Store())],
-                         value=Constant(value=0)),
-                    If(
-                         test=Compare(
-                              left=Name(id='number', ctx=Load()),
-                              ops=[
-                                   Gt()],
-                              comparators=[
-                                   Constant(value=0)]),
-                         body=[
-                              While(
-                                   test=Name(id='number', ctx=Load()),
-                                   body=[
-                                        AugAssign(
-                                             target=Name(id='b', ctx=Store()),
-                                             op=Mult(),
-                                             value=Name(id='number', ctx=Load())),
-                                        AugAssign(
-                                             target=Name(id='number', ctx=Store()),
-                                             op=Sub(),
-                                             value=Constant(value=1))],
-                                   orelse=[])],
-                         orelse=[
-                              While(
-                                   test=Name(id='number', ctx=Load()),
-                                   body=[
-                                        Assign(
-                                             targets=[
-                                                  Name(id='b', ctx=Store())],
-                                             value=BinOp(
-                                                  left=Name(id='b', ctx=Load()),
-                                                  op=LShift(),
-                                                  right=Constant(value=0))),
-                                        AugAssign(
-                                             target=Name(id='number', ctx=Store()),
-                                             op=Add(),
-                                             value=Constant(value=1))],
-                                   orelse=[])]),
+                         value=Call(
+                              func=Name(id='mod', ctx=Load()),
+                              args=[
+                                   Constant(value=21),
+                                   Constant(value=4)],
+                              keywords=[])),
                     Return(
                          value=Name(id='b', ctx=Load()))],
                decorator_list=[
