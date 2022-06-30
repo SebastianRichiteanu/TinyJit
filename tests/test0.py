@@ -2,41 +2,49 @@ from tinyjit import tinyjit
 import tinyjit.jit_types as t
 
 
-# ================ array
-arr = t.JArray(t.i64, 10)
-x = arr()
+@tinyjit
+def void_none():
+    return
+
+
+print("====== void_none function ======")
+print(void_none())
 
 
 @tinyjit
-def array0(a: arr):
+def fadd(a: t.f64):
+    return a + 2.123
 
-    for i in range(10):
-        a[i] = i
 
-    for i in range(10):
-        print(a[i])
+print("====== fadd function ======")
+print(fadd(3.14))
 
-#print("====== Array function ======")
-#array0(x)
+
+@tinyjit
+def negation(a: t.i64):
+    return -a
+
+
+print("====== negation function ======")
+print(negation(3))
+
+
+@tinyjit
+def shift0(a: t.i64, b: t.i64):
+    return a << b
+
+
+print("====== shift0 function ======")
+print(shift0(8, 2))
 
 
 @tinyjit
 def mod(a: t.i64, b: t.i64):
     return a % b
 
-# print("====== Mod function ======")
-# print(mod(21, 4))
 
-
-@tinyjit
-def call():
-    b = mod(21, 4)
-    return b
-
-
-print("====== Call function ======")
-mod(21, 4)
-print(call())
+print("====== Mod function ======")
+print(mod(212, 18))
 
 
 @tinyjit
@@ -47,8 +55,8 @@ def int_float():
     return c
 
 
-# print("====== int_float function ======")
-# print(int_float())
+print("====== int_float function ======")
+print(int_float())
 
 
 @tinyjit
@@ -57,58 +65,8 @@ def change_value(a: t.i64, b: t.i64):
     return a
 
 
-# print("====== change_value function ======")
-# print(change_value(5, 7))
-
-
-@tinyjit
-def for0():
-    b = 0
-    for a in range(2, 10, 2):  # 2 + 4 + 6 + 8 = 20
-        b += a
-    for c in range(12):  # 1 + 2 + .. + 11 = 66
-        b += c
-    return b
-
-
-# print("====== for function ======")
-# print(for0())
-
-
-@tinyjit
-def for_break():
-    b = 1
-    c = 5
-    for a in range(3, 7):
-        b *= a  # 1 * 3 = 3 * 4 = 12 * 5 = 60
-        if a == c:
-            break
-    return b
-
-
-# print("====== for_break function ======")
-# print(for_break())
-
-
-@tinyjit
-def strings():
-    var = "Hey"
-    print(var)
-    print(123)
-    print("Hello")
-
-
-# print("====== strings function ======")
-# strings()
-
-
-@tinyjit
-def fadd(a: t.f64):
-    return a + 2.123
-
-
-# print("====== fadd function ======")
-# print(fadd(3.14))
+print("====== change_value function ======")
+print(change_value(5, 7))
 
 
 @tinyjit
@@ -120,37 +78,8 @@ def and0():
     return False
 
 
-# print("====== and0 function ======")
-# print(and0())
-
-
-@tinyjit
-def negation(a: t.i64):
-    return -a
-
-
-# print("====== negation function ======")
-# print(negation(3))
-
-
-@tinyjit
-def shift0(a: t.i64, b: t.i64):
-    return a << b
-
-
-# print("====== shift0 function ======")
-# print(shift0(8, 2))
-
-
-@tinyjit
-def coerce_bool(a: t.i64):
-    if a:
-        return True
-    return False
-
-
-# print("====== coerce_bool function ======")
-# print(coerce_bool(3))
+print("====== and0 function ======")
+print(and0())
 
 
 @tinyjit
@@ -171,17 +100,48 @@ def cond(a: t.i64, b: t.i64, c: t.i8):
     return False
 
 
-# print("====== cond function ======")
-# print(cond(5, 4, 5))
+print("====== cond function ======")
+print(cond(5, 4, 5))
 
 
 @tinyjit
-def void_none():
-    return
+def coerce_bool(a: t.i64):
+    if a:
+        return True
+    return False
 
 
-# print("====== void_none function ======")
-# print(void_none())
+print("====== coerce_bool function ======")
+print(coerce_bool(3))
+
+
+@tinyjit
+def for0():
+    b = 0
+    for a in range(2, 10, 2):  # 2 + 4 + 6 + 8 = 20
+        b += a
+    for c in range(12):  # 1 + 2 + .. + 11 = 66
+        b += c
+    return b
+
+
+print("====== for function ======")
+print(for0())
+
+
+@tinyjit
+def for_break():
+    b = 1
+    c = 5
+    for a in range(3, 7):
+        b *= a  # 1 * 3 = 3 * 4 = 12 * 5 = 60
+        if a == c:
+            break
+    return b
+
+
+print("====== for_break function ======")
+print(for_break())
 
 
 @tinyjit
@@ -193,8 +153,8 @@ def while0():
     return a
 
 
-# print("====== while0 function ======")
-# print(while0())
+print("====== while0 function ======")
+print(while0())
 
 
 @tinyjit
@@ -209,6 +169,17 @@ def while_break():
     return d
 
 
-# print("====== while_break function ======")
-# print(while_break())
+print("====== while_break function ======")
+print(while_break())
 
+
+@tinyjit
+def strings():
+    var = "Hey"
+    print(var)
+    print(123)
+    print("Hello")
+
+
+print("====== strings function ======")
+strings()
