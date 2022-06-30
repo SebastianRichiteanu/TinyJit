@@ -22,7 +22,8 @@ def more_complex(number: t.i64):
     return b
 
 
-more_complex(3)
+number = -10000000
+more_complex(number)
 
 print(f"Exec time: {(time.time() - start_time)} seconds")
 current, peak = tracemalloc.get_traced_memory()

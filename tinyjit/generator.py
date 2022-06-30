@@ -91,7 +91,11 @@ class JitGenerator:
 
     def generate_all(self, obj, aa):
         # string name of the module this function lives in
-        self.help_cont = 0
+        if hasattr(self, "help_cont"):
+            if not self.help_cont:
+                self.help_cont = 0
+        else:
+            self.help_cont = 0
         self.aa = aa
         self.python_mod_name: str = obj.__module__
         # reference to module object that hosts this function
@@ -111,6 +115,7 @@ class JitGenerator:
             self.zero = self.mem_val(0)
 
         self.debug_var = True
+        #self.debug_var = False
         self.obj = obj
         self.instructions = ast.parse(inspect.getsource(obj))
         self.var_counter = 0
