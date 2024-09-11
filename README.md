@@ -1,6 +1,8 @@
 # TinyJit
 A Just-In-Time compiler for Python using LLVM.
 
+This project was developed as part of my bachelor's thesis in Informatics. For a detailed exploration of the concepts and methodologies behind this project, you can find the full thesis paper [here](Thesis.pdf).
+
 *DISCLAIMER* This is not a finished project, it does not support all the Python instructions and data structures.
 
 ## Example usage
