@@ -1,24 +1,79 @@
-# TinyJit
-A Just-In-Time compiler for Python using LLVM.
+# TinyJit ⚙️🐍  
+*A Just-In-Time Compiler for Python using LLVM*
 
-This project was developed as part of my bachelor's thesis in Informatics. For a detailed exploration of the concepts and methodologies behind this project, you can find the full thesis paper [here](Thesis.pdf).
+TinyJit is a lightweight JIT compiler for Python that leverages LLVM to accelerate Python functions at runtime. It was developed as part of my Bachelor’s thesis in Computer Science at the University of Bucharest. You can explore the full thesis [here](Thesis.pdf) for in-depth explanations, architecture, and performance benchmarks.
 
-*DISCLAIMER* This is not a finished project, it does not support all the Python instructions and data structures.
+> ⚠️ **Note**: TinyJit is a prototype and does not yet support all Python instructions or data structures.
 
-## Example usage
+---
 
-Just import the library and add the decorator before any function that you want to compile. Something like:
+## 🎯 Key Features
 
+- 🔧 **Decorator-Based JIT Compilation**  
+  Compile only the functions you want with a simple `@tinyjit` decorator.
+
+- 🧠 **LLVM Integration**  
+  Uses LLVM’s IR and execution engine via [llvmlite](https://llvmlite.readthedocs.io/) for efficient low-level code generation.
+
+- 🚀 **Performance Boost**  
+  Shows major speedups in large computational loops, often outperforming tools like Cython, Numba, and PyPy in specific cases.
+
+- 🧪 **Testable & Extensible**  
+  Modular structure with debug output, AST generation, and a suite of performance experiments.
+
+---
+
+## 🔍 Background
+
+Python’s interpreted nature makes it easy to use but slow to execute. TinyJit bridges that gap by compiling individual functions at runtime, allowing developers to optimize only performance-critical code while leaving the rest of the code untouched.
+
+Unlike general-purpose compilers like PyPy or Cython, TinyJit is:
+- ✅ Minimalistic and targeted
+- ✅ Customizable through Python decorators
+- ✅ Focused on understanding compiler construction (great for learning!)
+
+📘 *See the [Thesis.pdf](Thesis.pdf) for implementation details, LLVM IR samples, and test results.*
+
+---
+
+## 📦 Installation
+
+```bash
+pip install llvmlite
 ```
+
+Clone the repo:
+
+```bash
+git clone https://github.com/SebastianRichiteanu/TinyJit.git
+cd TinyJit
+```
+
+---
+
+## 🧪 Usage Example
+
+Just decorate any function you want to compile:
+
+```python
 from tinyjit import tinyjit
 
 @tinyjit
-def function_to_compile():
+def fib(n):
+    a = 0
+    b = 1
+    while b < n:
+        a, b = b, a + b
+    return a
 ```
 
-## The power of TinyJit
+Run your script as usual — TinyJit will JIT compile only the decorated function.
 
-TinyJit can execute code much faster than the regular Python interpreter and on big, time-consuming cases, it runs faster than popular compilers, e.g. Cython, PyPy, Numba.
+---
+
+## ⚡ Performance Comparison
+
+The following table shows execution times (in seconds) for the below function:
 
 ```
 @tinyjit
@@ -35,16 +90,67 @@ def more_complex(number: t.i64):
   return b
 ```
 
-For the above code, that does absolutely nothing, the execution times are:
+| Number       | Cython | PyPy  | Numba | TinyJit |
+|--------------|--------|-------|--------|---------|
+| 1000         | ~0     | 0.001 | 0.14   | 0.016   |
+| -1000        | ~0     | ~0    | 0.15   | 0.015   |
+| 1,000,000    | 0.025  | 0.002 | 0.15   | 0.016   |
+| -1,000,000   | 0.027  | 0.002 | 0.15   | 0.014   |
+| 10,000,000   | 0.246  | 0.008 | 0.15   | 0.018   |
+| -10,000,000  | 0.245  | 0.009 | 0.15   | 0.015   |
+| 1,000,000,000| 24.4   | 0.76  | 0.15   | 0.26    |
+| -1,000,000,000| 24.04 | 0.73  | 0.16   | 0.014   |
 
-| Number | Cython | PyPy | Numba | TinyJit |
-| --- | --- | --- | --- | --- |
-| 1000 | < $1e^{-12}$ s | 0.001 s | 0.14 s | 0.016 s |
-| -1000 | < $1e^{-12}$ s | < $1e^{-12}$ s | 0.15 s | 0.015 s |
-| 1000000 | 0.025 s | 0.002s | 0.15 s | 0.016 s |
-| -1000000 | 0.027 s | 0.002s | 015 s | 0.014 s |
-| 10000000 | 0.246 s | 0.008 s | 0.15 s | 0.018 s |
-| -10000000 | 0.245 s | 0.009 s | 0.15 s | 0.015 s |
-| 1000000000 | 24.4 s | 0.76 s | 0.15 s | 0.26 s |
-| -1000000000 | 24.04 s | 0.73 s | 0.16 s | 0.014 s |
+---
 
+## 🧱 Architecture Overview
+
+- `decorator.py` – wraps Python functions and triggers JIT compilation
+- `generator.py` – converts AST into LLVM IR
+- `engine.py` – compiles and executes the LLVM code
+- `jit_types.py` – defines supported types and handles type conversions
+- `standard_func.py` – built-in functions like `print`, `range`
+- `debug/` – optional output for generated IR and AST (when debug is enabled)
+
+---
+
+## 🚧 Limitations
+
+- Does not support all Python constructs (e.g., complex classes, dynamic types)
+- Only works on explicitly typed function arguments (use `t.i64`, `t.float`, etc.)
+- No exception handling
+- Memory usage is higher due to variable duplication when type casting
+
+---
+
+## 🧠 Behind the Compiler
+
+TinyJit processes functions in 4 main stages:
+1. **Source Extraction**: Using Python's `inspect` module
+2. **AST Parsing**: Converts function source into an abstract syntax tree
+3. **IR Generation**: Maps AST nodes to LLVM IR using `llvmlite`
+4. **Execution**: Runs the compiled IR with LLVM's JIT engine
+
+---
+
+## 📈 Benchmarking Setup
+
+- **Platform**: Linux / macOS / Windows  
+- **Compiler**: LLVM via `llvmlite`  
+- **Profiler**: `time`, `tracemalloc` for memory comparison  
+- **Reference Compilers**: Cython, PyPy, Numba  
+
+---
+
+## 📄 License
+
+This project is released under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## 🔗 Links
+
+- 📚 [Thesis.pdf](Thesis.pdf)
+- 🐍 [Python AST Docs](https://docs.python.org/3/library/ast.html)
+- 📘 [LLVM LangRef](https://llvm.org/docs/LangRef.html)
+- ⚙️ [llvmlite Docs](https://llvmlite.readthedocs.io/)
