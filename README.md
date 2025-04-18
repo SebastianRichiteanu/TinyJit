@@ -67,28 +67,33 @@ def fib(n):
     return a
 ```
 
+Or, try a more complex example:
+
+```python
+from tinyjit import tinyjit, t
+
+@tinyjit
+def more_complex(number: t.i64):
+    b = 0
+    if number > 0:
+        while number:
+            b *= number
+            number -= 1
+    else:
+        while number:
+            b = b << 0
+            number += 1
+    return b
+```
+
+
 Run your script as usual — TinyJit will JIT compile only the decorated function.
 
 ---
 
 ## ⚡ Performance Comparison
 
-The following table shows execution times (in seconds) for the below function:
-
-```
-@tinyjit
-def more_complex(number: t.i64):
-  b = 0
-  if number > 0:
-    while number:
-      b *= number
-      number -= 1
-  else:
-    while number:
-      b = b << 0
-      number += 1
-  return b
-```
+The following table shows execution times (in seconds) for the `more_complex` function:
 
 | Number       | Cython | PyPy  | Numba | TinyJit |
 |--------------|--------|-------|--------|---------|
@@ -139,12 +144,6 @@ TinyJit processes functions in 4 main stages:
 - **Compiler**: LLVM via `llvmlite`  
 - **Profiler**: `time`, `tracemalloc` for memory comparison  
 - **Reference Compilers**: Cython, PyPy, Numba  
-
----
-
-## 📄 License
-
-This project is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
